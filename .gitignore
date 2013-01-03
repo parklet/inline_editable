@@ -1,0 +1,11 @@
+# Mac finder artifacts
+.DS_Store
+
+# RubyMine project files
+.idea
+
+# Textmate project files
+/*.tmproj
+
+# vim artifacts
+**.swp
