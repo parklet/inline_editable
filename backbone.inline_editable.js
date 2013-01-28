@@ -86,7 +86,7 @@
 
     function flashMark(type, callback) {
       var $checkSpan = $("<span class='icon icon-" + type + (type === "ok" ? " green" : " red") + "'/>");
-      _.each(["background-color", "font-family", "font-size", "font-weight", "font-style", "line-height", "text-transform"], function (cssProp) {
+      _.each(["background-color", "font-size", "font-weight", "font-style", "line-height", "text-transform"], function (cssProp) {
         $checkSpan.css(cssProp, $el.css(cssProp));
       });
       $checkSpan.css({ "padding-left" : "10px", "display" : "none" });
