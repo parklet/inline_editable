@@ -10,7 +10,8 @@
       oldVal = $el.text(),
       oldFontStyle = $el.css("font-style"), oldMinWidth = $el.css("min-width"),
       oldDisplay = $el.css("display"), oldBackgroundColor = $el.css("background-color"),
-      resetBackgroundColor = function () {$el.css({"background-color" : oldBackgroundColor});};
+      resetBackgroundColor = function () {$el.css({"background-color" : oldBackgroundColor});},
+      hasPlaceholder = !!el.data("inline-placeholder-text");
 
     $el.click(resetBackgroundColor);
     $el.hover(function () {
@@ -34,16 +35,14 @@
     } else {
       $el.attr("contenteditable", true);
     }
-    if (options.placeholder && !$el.text()) {
-      $el.text(options.placeholder);
+    if (hasPlaceholder && !$el.text()) {
       $el.css({"font-style" : "italic", "min-width" : (options.minWidth || "50px"), "display" : (options.display || "inline-block")});
 
       $el.focus(function () {
-        if (options.placeholder === $el.text()) {
-          //TODO this doesn't actually work right if the user clicks on the placeholder text (rather than empty space).
-          $el.empty();
+        if ($el.hasClass("inline-placeholder")) {
+          $el.removeClass("inline-placeholder");
           $el.css({"font-style" : oldFontStyle});
-        }
+        }; 
       });
     }
 
@@ -56,8 +55,8 @@
 
     $el.blur(function () {
       var newVal = options.date ? dateObj : $el.text().trim();
-      var notPlaceholder = (!options.placeholder || newVal !== options.placeholder);
-      if (oldVal !== newVal && notPlaceholder) {
+
+      if (oldVal !== newVal && newVal !== "") {
         model.save(attribute, newVal, { success : function (newModel) {
           oldVal = newVal;
           $el.css({"font-style" : oldFontStyle, "min-width" : oldMinWidth, "display" : oldDisplay});
@@ -74,8 +73,8 @@
           });
         }});
       } else {
-        if (options.placeholder && newVal === "") {
-          $el.text(options.placeholder);
+        if (hasPlaceholder && newVal === "") {
+          $el.addClass("inline-placeholder");
           $el.css({"font-style" : "italic"});
         }
         if (options.onBlur) {
@@ -103,3 +102,27 @@
     }
   };
 })(jQuery, Backbone);
+
+(function($){
+
+  var Item = Backbone.Model.extend({
+    defaults: {
+      name: ''
+    }
+  });      
+
+  var ItemView = Backbone.View.extend({
+      el: $("body"),
+      template: "#foo",
+    initialize: function(){
+      _.bindAll(this, 'render');
+
+      this.render();      
+    },
+    render: function(){
+        Backbone.InlineEdit(this.$("#foo"), Item, "name", {placeholder: "SUPER TEXT"});
+    },
+  });
+
+  var itemView = new ItemView();
+})(jQuery);

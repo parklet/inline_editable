@@ -41,10 +41,6 @@ describe("InlineEdit", function () {
         expect($el.css("background-color")).toEqual("rgb(252, 255, 190)");
       });
 
-      it("should not have a placeholder", function () {
-        expect($el.text()).toEqual("");
-      });
-
       it("should not have a min width", function () {
         expect($el.css("min-width")).toEqual("0px");
       });
@@ -163,6 +159,63 @@ describe("InlineEdit", function () {
       $el.text("foobar");
       $el.blur();
       expect(blurCalled).toBeFalsy();
+    });
+  });
+
+  describe("placeholders", function () {
+    var $el,
+    model = new TestModel();
+
+    beforeEach(function () {
+      SpecDOM().html("<span id='foo'></span>");
+      $el = $("#foo");
+    });
+
+    describe("with a data-inline-placeholder-text", function () {
+      beforeEach(function () {
+        $el.data("inline-placeholder-text", "barbaz");
+        Backbone.InlineEdit($el, model, "name", {});
+      });
+
+      it("removes the inline-placeholder class on focus when element has the class", function () {
+        $el.addClass("inline-placeholder");
+        spyOn($.fn, "removeClass");
+        $el.focus();
+        expect($.fn.removeClass).toHaveBeenCalledInTheContextOf($el[0], ["inline-placeholder"]);
+      });
+
+      describe("blur", function () {
+        describe("with text", function () {
+          it("does not add the inline-placeholder class on blur", function () {
+            $el.text("boomtown");
+            spyOn($.fn, "addClass");
+            $el.blur();
+            expect($.fn.addClass).not.toHaveBeenCalledWith("inline-placeholder");
+          });  
+        });
+
+        describe("with empty text", function () {
+          it("adds the inline-placeholder class on blur", function () {
+            spyOn($.fn, "addClass");
+            $el.blur();
+            expect($.fn.addClass).toHaveBeenCalledInTheContextOf($el[0], ["inline-placeholder"]);
+          });  
+        });
+      });
+    });
+
+    describe("without a data-inline-placeholder-text", function () {
+      it("does not remove the inline-placeholder class on focus", function () {
+        spyOn($.fn, "removeClass");
+        $el.focus();
+        expect($.fn.removeClass).not.toHaveBeenCalledWith("inline-placeholder");
+      });
+
+      it("does not add the inline-placeholder class on blur", function () {
+        spyOn($.fn, "addClass");
+        $el.blur();
+        expect($.fn.addClass).not.toHaveBeenCalledWith("inline-placeholder");
+      });      
     });
   });
 
