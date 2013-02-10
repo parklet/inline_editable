@@ -102,27 +102,3 @@
     }
   };
 })(jQuery, Backbone);
-
-(function($){
-
-  var Item = Backbone.Model.extend({
-    defaults: {
-      name: ''
-    }
-  });      
-
-  var ItemView = Backbone.View.extend({
-      el: $("body"),
-      template: "#foo",
-    initialize: function(){
-      _.bindAll(this, 'render');
-
-      this.render();      
-    },
-    render: function(){
-        Backbone.InlineEdit(this.$("#foo"), Item, "name", {placeholder: "SUPER TEXT"});
-    },
-  });
-
-  var itemView = new ItemView();
-})(jQuery);
