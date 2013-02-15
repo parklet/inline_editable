@@ -11,7 +11,7 @@
       oldFontStyle = $el.css("font-style"), oldMinWidth = $el.css("min-width"),
       oldDisplay = $el.css("display"), oldBackgroundColor = $el.css("background-color"),
       resetBackgroundColor = function () {$el.css({"background-color" : oldBackgroundColor});},
-      hasPlaceholder = !!el.data("inline-placeholder-text");
+      hasPlaceholder = !!$el.data("inline-placeholder-text");
 
     $el.click(resetBackgroundColor);
     $el.hover(function () {
