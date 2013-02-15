@@ -4,6 +4,11 @@
 // Distributed Under MIT License
 
 (function ($, Backbone, undefined) {
+  $("<style type='text/css'> " +
+  ".inline-placeholder:after{ content: attr(data-inline-placeholder-text);} " +
+  ".inline-placeholder {color: #6666FF;} " +
+  "</style>").prependTo("head");
+
   Backbone.InlineEdit = function (el, model, attribute, options) {
     var options = (typeof options === "undefined" ? {} : options);
     var $el = (el instanceof $) ? el : $(el),

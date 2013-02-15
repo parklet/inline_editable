@@ -33,8 +33,7 @@ Backbone.InlineEdit(element, model, attribute, options);
 
 ### Placeholders
 
-For any element which needs a placeholder, add a `data-inline-placeholder-text` attribute with a value of the intended placeholder. Also, any element which has that data attribute
-must also have an accompanying `inline-placeholder` class which specifies the content via an `:after` pseudo-element.
+For any element which needs a placeholder, add a `data-inline-placeholder-text` attribute with a value of the intended placeholder. A stylesheet will be prepended to head which will provide the necessary css to display the content of that attribute. 
 
 Examples
 
@@ -46,13 +45,13 @@ Examples
 </div>
 ```
 
+Furthermore, the color of the placeholder can be styled from the default color to a differing color in your css.
+
 ```css
-#foo.inline-placeholder:after {
-    content: attr(data-inline-placeholder-text);
+#foo.inline-placeholder {
+    color: orange;
 }
 ```
-
-A jsfiddle [example](http://jsfiddle.net/jbran/XjP88/2/ "jsfiddle example").
 
 ### Example Usage:
 
