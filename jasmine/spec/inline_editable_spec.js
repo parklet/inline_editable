@@ -106,6 +106,17 @@ describe("InlineEdit", function () {
       });
     });
 
+    describe("placeholder", function () {
+      beforeEach(function () {
+        options["placeholder"] = "goobermountain";
+        Backbone.InlineEdit($el, model, attr, options);
+      });
+
+      it("should adorn the element with the appropriate data attribute", function () {
+        expect($el.data("inline-placeholder-text")).toEqual("goobermountain");
+      });
+    });
+
     describe("success and error callbacks", function () {
       var successCalled, errorCalled;
       beforeEach(function () { // Mock fadeout so callbacks are called
