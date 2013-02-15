@@ -26,6 +26,7 @@ Backbone.InlineEdit(element, model, attribute, options);
 * `success` : Callback on successful save
 * `error` : Callback on failed save
 * `onBlur` : Callback onBlur when a save is NOT performed because the value did not change
+* `placeholder` : Placeholder text for elements that are empty
 * `date` : Make editable element use a date picker (Requires datepicker dependency)
 * `hoverColor` : Color for editable element hover state
 * `minWidth` : Minimum width of editable element
@@ -33,14 +34,14 @@ Backbone.InlineEdit(element, model, attribute, options);
 
 ### Placeholders
 
-For any element which needs a placeholder, add a `data-inline-placeholder-text` attribute with a value of the intended placeholder. A stylesheet will be prepended to head which will provide the necessary css to display the content of that attribute. 
+Optionally, you can set the data-inline-placeholder-text property on the HTML node instead of passing a value into the `InlineEditable` function.
 
 Examples
 
 ```html
 <div>
   This is text and here is the part
-    <span id="foo" class="inline-placeholder" data-inline-placeholder-text="{edit me}" contenteditable="true"></span>
+    <span id="foo" data-inline-placeholder-text="{edit me}" contenteditable="true"></span>
   for editing.
 </div>
 ```
