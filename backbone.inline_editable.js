@@ -1,4 +1,4 @@
-// Backbone.InlineEdit v0.1
+// Backbone.InlineEdit v0.2
 // https://github.com/parklet/inline_editable
 // (c) 2013 Parklet Inc
 // Distributed Under MIT License
@@ -47,14 +47,44 @@
       });
     }
 
+    if (options.autocomplete && !options.date) {
+      options.autocomplete = options.autocomplete instanceof Backbone.Collection ? _.uniq(options.autocomplete.pluck(attribute)) : options.autocomplete;
+      var $autoBox = $("<ul class='autocomplete' id='" + ["autocomplete", model.cid, attribute].join("-") + "'/>"),
+        $autocompleteLis = _.map(options.autocomplete, function (autoValue) {
+          var $li = $("<li>" + autoValue + "</li>").on("click", function (e) {
+            $autoBox.hide();
+            $el.text($(this).text()).blur();
+          });
+          $autoBox.append($li);
+          return $li
+        });
+      $autoBox.css({"list-style" : "none", "position" : "absolute", "z-index" : "1000", "display" : "inline-block", "padding-left" : "0"});
+      $autoBox.hide().appendTo($("body"));
+      var regexBuilder = function (str) {
+        return new RegExp("^" + str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), "g");
+      };
+    }
+
     $el.keydown(function (e) {
       if (e.keyCode == "13") {
         e.preventDefault();
         $el.blur();
       }
     });
+    $el.keyup(function (e) {
+      if (options.autocomplete && !options.date) {
+        $autoBox.show();
+        _.each($autocompleteLis, function ($li) {
+          if ($li.text().match(regexBuilder($el.text()))) {
+            $li.show();
+          } else {
+            $li.hide();
+          }
+        });
+      }
+    });
 
-    $el.blur(function () {
+    var blurHandler = function (e) {
       var newVal = options.date ? dateObj : $el.text().trim();
       var notPlaceholder = (!options.placeholder || newVal !== options.placeholder);
       if (oldVal !== newVal && notPlaceholder) {
@@ -82,9 +112,11 @@
           options.onBlur();
         }
       }
-    });
+    };
 
-    function flashMark(type, callback) {
+    $el.blur(blurHandler);
+
+    function flashMark (type, callback) {
       var $checkSpan = $("<span class='icon icon-" + type + (type === "ok" ? " green" : " red") + "'/>");
       _.each(["background-color", "font-size", "font-weight", "font-style", "line-height", "text-transform"], function (cssProp) {
         $checkSpan.css(cssProp, $el.css(cssProp));
