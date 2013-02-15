@@ -164,6 +164,35 @@ describe("InlineEdit", function () {
       $el.blur();
       expect(blurCalled).toBeFalsy();
     });
+
+    describe("autocomplete", function () {
+      afterEach(function () {
+        $("ul.autocomplete").remove();
+      });
+      
+      it("should accept a list of autocomplete values", function () {
+        options["autocomplete"] = ["foo", "bar", "baz", "bing"];
+        Backbone.InlineEdit($el, model, attr, options);
+        expect($("ul.autocomplete li").length).toEqual(4);
+      });
+
+      it("on click it should set the text for the element to the li's text", function () {
+        options["autocomplete"] = ["foo", "bar", "baz", "bing"];
+        Backbone.InlineEdit($el, model, attr, options);
+        $("ul.autocomplete li:first").click();
+        expect($el.text()).toEqual("foo");
+      });
+
+      it("should work with a collection", function () {
+        options["autocomplete"] = new Backbone.Collection([
+          {name : "foo"},
+          {name : "bar"}
+        ]);
+        Backbone.InlineEdit($el, model, attr, options);
+        $("ul.autocomplete li:first").click();
+        expect($el.text()).toEqual("foo");
+      });
+    });
   });
 
   describe("date fields", function () {

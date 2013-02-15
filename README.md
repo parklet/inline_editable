@@ -31,6 +31,8 @@ Backbone.InlineEdit(element, model, attribute, options);
 * `hoverColor` : Color for editable element hover state
 * `minWidth` : Minimum width of editable element
 * `display` : CSS display property value for editable elements
+* `autocomplete` : Array or Backbone.Collection of autocomplete values
+
 ### Example Usage:
 
 Basic usage look would look like this:
