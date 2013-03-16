@@ -6,7 +6,7 @@
 (function ($, Backbone, undefined) {
   $("<style type='text/css'> " +
     ".inline-placeholder:after{ content: attr(data-inline-placeholder-text);} " +
-    ".inline-placeholder {color: #6666FF;} " +
+    ".inline-placeholder {color: #222;} " +
     "</style>").prependTo("head");
 
   Backbone.InlineEdit = function (el, model, attribute, options) {
@@ -41,6 +41,7 @@
           $el.text($el.data("date"))
             .blur()
             .data("datepicker").hide();
+          $el.removeClass("inline-placeholder");
         });
     } else {
       $el.attr("contenteditable", true);
@@ -57,16 +58,20 @@
           $el.css({"font-style" : oldFontStyle});
         }
       }).focusout(function () {
-        if (hasPlaceholder && !$el.text()) {
-          $el.addClass("inline-placeholder");
-        }
-      });
+          if (hasPlaceholder && !$el.text()) {
+            $el.addClass("inline-placeholder");
+          }
+        });
     }
 
     $el.keydown(function (e) {
       if (e.keyCode == "13") {
-        e.preventDefault();
-        $el.blur();
+        if (e.shiftKey) {
+          pasteIntoInput(this, "\n");
+        } else {
+          e.preventDefault();
+          $el.blur();
+        }
       }
     });
 
@@ -116,6 +121,22 @@
           }
         });
       }, 600);
+    }
+
+    function pasteIntoInput (el, text) {
+      el.focus();
+      if (typeof el.selectionStart == "number"
+        && typeof el.selectionEnd == "number") {
+        var val = el.value;
+        var selStart = el.selectionStart;
+        el.value = val.slice(0, selStart) + text + val.slice(el.selectionEnd);
+        el.selectionEnd = el.selectionStart = selStart + text.length;
+      } else if (typeof document.selection != "undefined") {
+        var textRange = document.selection.createRange();
+        textRange.text = text;
+        textRange.collapse(false);
+        textRange.select();
+      }
     }
   };
 })(jQuery, Backbone);
