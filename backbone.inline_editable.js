@@ -110,6 +110,11 @@
       _.each(["background-color", "font-size", "font-weight", "font-style", "line-height", "text-transform"], function (cssProp) {
         $checkSpan.css(cssProp, $el.css(cssProp));
       });
+
+      _.each(["font-size", "line-height"], function (cssProp) {
+        $checkSpan.css(cssProp, Math.floor(parseInt($el.css(cssProp))) + "px");
+      });
+
       $checkSpan.css({ "padding-left" : "10px", "display" : "none" });
       $checkSpan.appendTo($el);
       $checkSpan.fadeIn(200);
