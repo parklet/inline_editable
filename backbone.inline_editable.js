@@ -1,4 +1,4 @@
-// Backbone.InlineEdit v0.2
+// Backbone.InlineEdit v0.2.1
 // https://github.com/parklet/inline_editable
 // (c) 2013 Parklet Inc
 // Distributed Under MIT License
