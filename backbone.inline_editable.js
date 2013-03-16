@@ -12,7 +12,7 @@
   Backbone.InlineEdit = function (el, model, attribute, options) {
     options = (typeof options === "undefined" ? {} : options);
     var $el = (el instanceof $) ? el : $(el),
-      oldVal = $el.text(),
+      oldVal = $el.html(),
       oldFontStyle = $el.css("font-style"), oldMinWidth = $el.css("min-width"),
       oldDisplay = $el.css("display"), oldBackgroundColor = $el.css("background-color"),
       resetBackgroundColor = function () {$el.css({"background-color" : oldBackgroundColor});};
@@ -47,7 +47,7 @@
       $el.attr("contenteditable", true);
     }
     if (hasPlaceholder) {
-      if (!$el.text()) {
+      if (!$el.html()) {
         $el.css({"font-style" : "italic", "min-width" : (options.minWidth || "50px"), "display" : (options.display || "inline-block")});
         $el.addClass("inline-placeholder");
       }
@@ -58,7 +58,7 @@
           $el.css({"font-style" : oldFontStyle});
         }
       }).focusout(function () {
-          if (hasPlaceholder && !$el.text()) {
+          if (hasPlaceholder && !$el.html()) {
             $el.addClass("inline-placeholder");
           }
         });
@@ -66,7 +66,7 @@
 
     $el.keydown(function (e) {
       if (e.keyCode == "13") {
-        if (e.shiftKey) {
+        if (e.shiftKey && options.allowLineBreaks) {
           pasteIntoInput(this, "\n");
         } else {
           e.preventDefault();
@@ -76,7 +76,7 @@
     });
 
     $el.blur(function () {
-      var newVal = options.date ? dateObj : $el.text().trim();
+      var newVal = options.date ? dateObj : $el.html().trim();
 
       if (oldVal !== newVal && newVal !== "") {
         model.save(attribute, newVal, { success : function (newModel) {
